@@ -1,7 +1,6 @@
-import { auth } from "@/auth";
+import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 import Searchform from "../../components/Searchform";
-import Startupcard from "../../components/Startupcard";
-import { client } from "@/sanity/lib/client";
+import Startupcard, { StartupCardType } from "../../components/Startupcard";
 import { STARTUP_QUERY } from "@/sanity/lib/queries";
 
 export default async function Home({
@@ -10,23 +9,13 @@ export default async function Home({
   searchParams: Promise<{ query?: string }>;
 }) {
   const query = (await searchParams).query;
-
-  const posts = await client.fetch(STARTUP_QUERY)
-
-  // const posts = [ { 
-  //   _createdAt: new Date(),
-  //   views: 100,
-  //   author: { _id: 1, name: "Aryan Shandilya" },
-  //   _id : 1,
-  //   description: "Detoxify your social media feed and make it more productive with Detoxify UI",
-  //   image: "https://images.unsplash.com/photo-1587727383733-f5222d6855b5?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  //   category: "Tech",
-  //   title: "Detoxify UI",
-  // }, ]
+  const params = { search: query || null}
+  const {data: posts} = await sanityFetch( { query: STARTUP_QUERY, params} )
 
   return (
     <>
       <section className="pink_container">
+        <p className="tag">PITCH AND GROW</p>
         <h1 className="heading">
           Pitch Your Startup, <br /> Connect With Entrepreneurs{" "}
         </h1>
@@ -51,6 +40,8 @@ export default async function Home({
           ): ( <p className="no-results">No posts found</p> )}
         </ul>
       </section>
+
+      <SanityLive/>
     </>
   );
 }
